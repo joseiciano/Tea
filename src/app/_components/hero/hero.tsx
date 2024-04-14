@@ -1,8 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-import NextImage from "next/image";
 import {
   Image,
   Container,
@@ -12,7 +9,6 @@ import {
   Text,
   List,
   ThemeIcon,
-  rem,
 } from "@mantine/core";
 
 import classes from "./hero.module.css";
@@ -27,9 +23,8 @@ export function HeroBullets() {
             Interview
           </Title>
           <Text c="dimmed" mt="md">
-            Build fully functional accessible web applications faster than ever
-            – Mantine includes more than 120 customizable components and hooks
-            to cover you in any situation
+            Be able to review hundreds of companies for their interview process.
+            Know how to prep for your specific job.
           </Text>
 
           <List
@@ -54,8 +49,8 @@ export function HeroBullets() {
               can use Mantine in any project
             </List.Item>
             <List.Item>
-              <b>No annoying focus ring</b> – focus ring will appear only when
-              user navigates with keyboard
+              <b>A Brick Door</b> – We will not make your personal info public
+              without warning you.
             </List.Item>
           </List>
 

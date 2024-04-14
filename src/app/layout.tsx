@@ -8,7 +8,6 @@ import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
-import { generateColors } from "@mantine/colors-generator";
 
 const inter = Inter({
   subsets: ["latin"],

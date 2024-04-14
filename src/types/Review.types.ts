@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-export const ReviewSchema = z.object({
+export const ReviewFormSchema = z.object({
   company: z.string().min(1),
+  companyOther: z.string().optional(),
   position: z.string().min(1),
   url: z.string().min(1),
   consent: z.boolean(),
@@ -12,4 +13,4 @@ export const ReviewSchema = z.object({
   gotTheJob: z.boolean(),
 });
 
-export type Review = z.infer<typeof ReviewSchema>;
+export type ReviewForm = z.infer<typeof ReviewFormSchema>;
