@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/form";
+import "@tabler/icons-react";
 
 import "@mantine/colors-generator";
 
@@ -8,6 +9,9 @@ import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
+import { getServerAuthSession } from "~/server/auth";
+import { Footer } from "./_components/footer/Footer";
+import Navbar from "./_components/navbar/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,6 +26,7 @@ export const metadata = {
 
 const theme = createTheme({
   primaryColor: "red",
+  white: "#f6efec",
   colors: {
     // blue: generateColors("#375EAC"),b
     blue: [
@@ -48,23 +53,38 @@ const theme = createTheme({
       "#bb320d",
       "#a32805",
     ],
+    brown: [
+      "#f8f2f1",
+      "#eae3e2",
+      "#d7c3c0",
+      "#c4a09b",
+      "#b5837c",
+      "#ac7168",
+      "#a8675d",
+      "#93564e",
+      "#844c43",
+      "#754038",
+    ],
   },
 
   // fontFamily: "open sans",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <TRPCReactProvider>
-          <MantineProvider theme={theme}>
+          <MantineProvider theme={theme} defaultColorScheme="auto">
             <ColorSchemeScript />
+            <Navbar session={session} />
             {children}
+            <Footer />
           </MantineProvider>
         </TRPCReactProvider>
       </body>

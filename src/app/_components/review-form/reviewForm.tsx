@@ -12,8 +12,7 @@ import {
 import { useForm } from "@mantine/form";
 import { type GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
 import React from "react";
-import { z } from "zod";
-import { type Review } from "~/types/Review.types";
+import { type ReviewForm } from "~/types/Review.types";
 
 function RatingInput({
   name,
@@ -30,10 +29,16 @@ function RatingInput({
   );
 }
 
-function ReviewForm() {
-  const form = useForm({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ReviewForm({
+  submitReview,
+}: {
+  submitReview: (values: ReviewForm) => Promise<ReviewForm>;
+}) {
+  const form = useForm<ReviewForm>({
     initialValues: {
       company: "",
+      companyOther: "",
       consent: true,
       position: "",
       url: "",
@@ -43,27 +48,52 @@ function ReviewForm() {
       detailed: "",
       gotTheJob: false,
     },
+
+    validate: {
+      company: (value) => value.length > 0,
+      position: (value) => value.length > 0,
+      url: (value) =>
+        value.match(
+          new RegExp(
+            "/^((https?)://)?([w|W]{3}.)+[a-zA-Z0-9-.]{3,}.[a-zA-Z]{2,}(.[a-zA-Z]{2,})?$/",
+          ),
+        ),
+      rating: (value) => value > 0 && value < 6,
+      difficulty: (value) => value > 0 && value < 6,
+      responsiveness: (value) => value > 0 && value < 6,
+      detailed: (value) => value.length > 0,
+    },
   });
 
-  const handleOnSubmit = (values: Review) => {
-    console.log("Values", values);
+  const handleOnSubmit = async (values: ReviewForm) => {
+    const result = await submitReview(values);
+
+    console.log("Result of api call", result);
   };
 
   return (
-    <form
-      onSubmit={form.onSubmit((values: Review) => {
-        handleOnSubmit(values);
-      })}
-    >
+    <form>
       <Select
         withAsterisk
         label="Company"
         placeholder="Select Company"
-        data={["React", "Angular", "Vue", "Svelte"]}
+        data={["React", "Angular", "Vue", "Svelte", "Other"]}
         searchable
         {...form.getInputProps("company")}
         className="mt-5"
+        error="Section cannot be left blank."
       />
+
+      {form.values.company === "Other" && (
+        <TextInput
+          withAsterisk
+          label="Other"
+          placeholder="Enter Company Below"
+          {...form.getInputProps("companyOther")}
+          className="mt-5"
+          error="Section cannot be left blank."
+        />
+      )}
 
       <TextInput
         withAsterisk
@@ -71,6 +101,7 @@ function ReviewForm() {
         placeholder="Job Position"
         {...form.getInputProps("position")}
         className="mt-5"
+        error="Section cannot be left blank."
       />
 
       <TextInput
@@ -79,9 +110,10 @@ function ReviewForm() {
         placeholder="Application URL"
         {...form.getInputProps("url")}
         className="mt-5"
+        error="Invalid URL."
       />
 
-      <RatingInput name="Review" inputProps={form.getInputProps("review")} />
+      <RatingInput name="Review" inputProps={form.getInputProps("rating")} />
 
       <RatingInput
         name="Difficulty"
@@ -100,6 +132,7 @@ function ReviewForm() {
           placeholder="Enter details about your experience"
           maxLength={500}
           {...form.getInputProps("detailed")}
+          error="Section cannot be left blank."
         />
         <div dir="rtl">
           <p
@@ -123,11 +156,20 @@ function ReviewForm() {
       <Checkbox
         mt="md"
         label="I agree to have my review stored for data purposes"
-        {...form.getInputProps("termsOfService", { type: "checkbox" })}
+        {...form.getInputProps("consent", { type: "checkbox" })}
+        error="User consent is required."
       />
 
       <Group justify="flex-end" mt="md">
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          onClick={async (event) => {
+            event.preventDefault();
+            await handleOnSubmit(form.values);
+          }}
+        >
+          Submit
+        </Button>
       </Group>
     </form>
   );

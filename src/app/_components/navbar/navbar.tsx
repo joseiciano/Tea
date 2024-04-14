@@ -12,35 +12,43 @@ import {
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-// import { MantineLogo } from "@mantinex/mantine-logo";
-import classes from "./navbar.module.css";
+import classes from "./Navbar.module.css";
+import { type Session } from "next-auth";
+import { usePathname } from "next/navigation";
+import ColorToggle from "../color-toggle/colorToggle";
 
 const links = [
-  { link: "/about", label: "Features" },
-  { link: "/pricing", label: "Pricing" },
-  { link: "/learn", label: "Learn" },
-  { link: "/community", label: "Community" },
+  { link: "/", label: "Home" },
+  { link: "/companies", label: "Companies" },
+  { link: "/submit-review", label: "Make a Review" },
+  { link: "/api/auth/signin", label: "Sign In" },
+  { link: "/api/auth/signout", label: "Sign Out" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ session }: { session: Session | null }) {
   const [opened, { toggle }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0]!.link);
+  const pathname = usePathname();
+  const [active, setActive] = useState(
+    links.find(({ link }) => link === pathname)!.link,
+  );
 
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      data-active={active === link.link || undefined}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-        console.log("Route to", link);
-      }}
-    >
-      {link.label}
-    </a>
-  ));
+  const items = links
+    .filter(({ label }) => label !== (session ? "Sign In" : "Sign Out"))
+    .map(({ label, link }) => (
+      <a
+        key={label}
+        href={link}
+        className={classes.link}
+        data-active={active === link || undefined}
+        onClick={(event) => {
+          // event.preventDefault();
+          setActive(link);
+          console.log("Route to", link);
+        }}
+      >
+        {label}
+      </a>
+    ));
 
   return (
     <header className={classes.header}>
@@ -48,6 +56,7 @@ export default function Navbar() {
         <div>Title Here</div>
         <Group gap={5} visibleFrom="xs">
           {items}
+          <ColorToggle />
         </Group>
 
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
