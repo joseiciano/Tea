@@ -33,6 +33,8 @@
   @media (max-width: $mantine-breakpoint-xs) {
     flex: 1;
   }
+
+  background-color: var(--mantine-primary-color-filled);
 }
 
 .image {

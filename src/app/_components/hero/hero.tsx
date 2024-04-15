@@ -19,12 +19,12 @@ export function HeroBullets() {
       <div className={classes.inner}>
         <div className={classes.content}>
           <Title className={classes.title}>
-            Review <span className={classes.highlight}>Before</span> the <br />{" "}
-            Interview
+            <span className={classes.highlight}>View</span> the{" "}
+            <span className={classes.highlight}>&apos;View</span>
           </Title>
           <Text c="dimmed" mt="md">
-            Be able to review hundreds of companies for their interview process.
-            Know how to prep for your specific job.
+            Know what you&apos;re getting into? Review the interview process for
+            a company you&apos;re applying for.
           </Text>
 
           <List
@@ -41,22 +41,21 @@ export function HeroBullets() {
             }
           >
             <List.Item>
-              <b>TypeScript based</b> – build type safe applications, all
-              components and hooks export types
+              <b>Know the Game</b> – Be able to prep specifically for the job.
             </List.Item>
             <List.Item>
-              <b>Free and open source</b> – all packages have MIT license, you
-              can use Mantine in any project
+              <b>Yearly Updated</b> – Stay fresh and up-to-date with the most
+              recent info.
             </List.Item>
             <List.Item>
-              <b>A Brick Door</b> – We will not make your personal info public
-              without warning you.
+              <b>Privacy</b> – Reviews stay anonymous. We won&apos;t publicly
+              reveal your information.
             </List.Item>
           </List>
 
           <Group mt={30}>
             <Button radius="xl" size="md" className={classes.control}>
-              Get started
+              Company Reviews
             </Button>
             <Button
               variant="default"
@@ -64,7 +63,7 @@ export function HeroBullets() {
               size="md"
               className={classes.control}
             >
-              Source code
+              Submit a Review
             </Button>
           </Group>
         </div>
