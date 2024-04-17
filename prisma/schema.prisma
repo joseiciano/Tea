@@ -63,25 +63,24 @@ model User {
     sessions      Session[]
     posts         Post[]
 
-    reviews Review[]
-}
-
-model Company {
-    id String @id @default(cuid())
-    name String @unique
-    reviews Review[]
-    
+    // reviews Review[]
 }
 
 model Review {
     id String @id @default(cuid())
-    fivestarRating Float
-    description String
-    company Company @relation(fields: [companyName], references: [name])
-    companyName String
+    company String
+    rating Int
+    difficulty Int
+    responsiveness Int
+    gotTheJob Boolean
 
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
+    detailed String
+    url String
+    date_created DateTime
+    created_by String // Change to id referencing User when using real data
+
+    // author User @relation(fields: [authorId], references: [id])
+    // authorId String
 }
 
 model VerificationToken {
