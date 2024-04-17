@@ -59,7 +59,7 @@ function filterData(data: Review[], search: string) {
 
   return data.filter((item) =>
     keys(item).some((key) => {
-      return `${item[key]}`.toLowerCase().includes(query);
+      return String(item[key]).toLowerCase().includes(query);
     }),
   );
 }
@@ -78,9 +78,10 @@ function sortData(
 
   return filterData(
     [...data].sort((a, b) => {
-      return `${reversed ? b[sortBy] : a[sortBy]}`.localeCompare(
-        `${reversed ? a[sortBy] : b[sortBy]}`,
-      );
+      if (reversed) {
+        return String(b[sortBy]).localeCompare(String(a[sortBy]));
+      }
+      return String(a[sortBy]).localeCompare(String(b[sortBy]));
     }),
     search,
   );
@@ -119,7 +120,7 @@ export default function CompanyList({
     );
   };
 
-  const rows = sortedData.map((element) => (
+  const rows = sortedData.map((element: Review) => (
     <Table.Tr key={element.id}>
       <Table.Td>{element.company}</Table.Td>
       <Table.Td>
@@ -127,7 +128,7 @@ export default function CompanyList({
           name="rating"
           size="lg"
           fractions={2}
-          value={element.rating as number}
+          value={element.rating}
           readOnly
         />
       </Table.Td>
@@ -136,7 +137,7 @@ export default function CompanyList({
           name="rating"
           size="lg"
           fractions={2}
-          value={element.difficulty as number}
+          value={element.difficulty}
           readOnly
         />
       </Table.Td>
@@ -145,14 +146,12 @@ export default function CompanyList({
           name="rating"
           size="lg"
           fractions={2}
-          value={element.responsiveness as number}
+          value={element.responsiveness}
           readOnly
         />
       </Table.Td>
       <Table.Td>{element.gotTheJob ? "T" : "F"}</Table.Td>
-      <Table.Td>
-        {dayjs(element.date_created as Date).format("DD-MM-YYYY")}
-      </Table.Td>
+      <Table.Td>{dayjs(element.date_created).format("DD-MM-YYYY")}</Table.Td>
     </Table.Tr>
   ));
 
