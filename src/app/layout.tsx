@@ -7,7 +7,6 @@ import "@mantine/colors-generator";
 
 import { Inter } from "next/font/google";
 
-import { TRPCReactProvider } from "~/trpc/react";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 import { getServerAuthSession } from "~/server/auth";
 import { Footer } from "./_components/footer/Footer";
@@ -79,14 +78,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>
-          <MantineProvider theme={theme} defaultColorScheme="auto">
-            <ColorSchemeScript />
-            <Navbar session={session} />
-            {children}
-            <Footer />
-          </MantineProvider>
-        </TRPCReactProvider>
+        <MantineProvider theme={theme} defaultColorScheme="auto">
+          <ColorSchemeScript />
+          <Navbar session={session} />
+          {children}
+          <Footer />
+        </MantineProvider>
       </body>
     </html>
   );
