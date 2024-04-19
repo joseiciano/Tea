@@ -29,7 +29,7 @@ export default function Navbar({ session }: { session: Session | null }) {
   const [opened, { toggle }] = useDisclosure(false);
   const pathname = usePathname();
   const [active, setActive] = useState(
-    links.find(({ link }) => link === pathname)!.link,
+    links.find(({ link }) => link === pathname)?.link,
   );
 
   const items = links

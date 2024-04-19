@@ -4,12 +4,7 @@ import {
   Table,
   ScrollArea,
   UnstyledButton,
-  Group,
   Text,
-  Center,
-  TextInput,
-  rem,
-  keys,
   Rating,
   Pagination,
 } from "@mantine/core";
@@ -19,114 +14,96 @@ import {
   IconSelector,
   IconChevronDown,
   IconChevronUp,
-  IconSearch,
 } from "@tabler/icons-react";
 import classes from "./CompanyList.module.css";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface ThProps {
   children: React.ReactNode;
-  reversed: boolean;
-  sorted: boolean;
   onSort(): void;
 }
 
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted
-    ? reversed
+function Th({ children, onSort }: ThProps) {
+  const searchParams = useSearchParams();
+
+  const Icon = searchParams.get("sortBy")
+    ? searchParams.get("reversed") === "true"
       ? IconChevronUp
       : IconChevronDown
     : IconSelector;
   return (
     <Table.Th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group justify="space-between">
+        <Text fw={500} fz="sm">
+          {children}
+        </Text>
+        {/* <Group justify="space-between">
           <Text fw={500} fz="sm">
             {children}
           </Text>
           <Center className={classes.icon}>
             <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </Center>
-        </Group>
+        </Group> */}
       </UnstyledButton>
     </Table.Th>
   );
 }
 
-function filterData(data: Review[], search: string) {
-  const query = search.toLowerCase().trim();
-
-  return data.filter((item) =>
-    keys(item).some((key) => {
-      return String(item[key]).toLowerCase().includes(query);
-    }),
-  );
-}
-
-function sortData(
-  data: Review[],
-  {
-    sortBy,
-    reversed,
-    search,
-  }: { sortBy: keyof Review | null; reversed: boolean; search: string },
-) {
-  if (!sortBy) {
-    return filterData(data, search);
-  }
-
-  return filterData(
-    [...data].sort((a, b) => {
-      if (reversed) {
-        return String(b[sortBy]).localeCompare(String(a[sortBy]));
-      }
-      return String(a[sortBy]).localeCompare(String(b[sortBy]));
-    }),
-    search,
-  );
-}
-
 export default function CompanyList({
   companies,
-  reviewCount,
-  getCompanies,
+  maxPages,
 }: {
   companies: Review[];
-  reviewCount: number;
-  getCompanies: (page?: number, take?: number) => Promise<Review[]>;
+  maxPages: number;
 }) {
-  const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(companies);
-  const [sortBy, setSortBy] = useState<keyof Review | null>(null);
-  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const setSorting = (field: keyof Review) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(companies, { sortBy: field, reversed, search }));
+  // const setSorting = (field: keyof Review) => {
+  //   const reversed = field === sortBy ? !reverseSortDirection : false;
+  //   setReverseSortDirection(reversed);
+  //   setSortBy(field);
+  //   setSortedData(sortData(companies, { sortBy: field, reversed, search }));
+  // };
+
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.currentTarget;
+  //   setSearch(value);
+  //   setSortedData(
+  //     sortData(sortedData, {
+  //       sortBy,
+  //       reversed: reverseSortDirection,
+  //       search: value,
+  //     }),
+  //   );
+  // };
+
+  const handleNewPage = (page: number) => {
+    let params = `?page=${page}`;
+    if (searchParams.get("sortBy")) {
+      params += `&sortBy=${searchParams.get("sortBy")}&reversed=${searchParams.get("reversed")}`;
+    }
+
+    router.push(`${pathname}${params}`);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(companies, {
-        sortBy,
-        reversed: reverseSortDirection,
-        search: value,
-      }),
-    );
+  const handleNewSorting = (field: keyof Review) => {
+    const reversed = !(searchParams.get("reversed") === "true");
+    router.push(`${pathname}?page=1&sortBy=${field}&reversed=${reversed}`);
   };
 
-  const rows = sortedData.map((element: Review) => (
+  const rows = companies.map((element: Review) => (
     <Table.Tr key={element.id}>
+      <Table.Td>{dayjs(element.date_created).format("DD-MM-YYYY")}</Table.Td>
+
       <Table.Td>{element.company}</Table.Td>
       <Table.Td>
         <Rating
           name="rating"
-          size="lg"
+          size="sm"
           fractions={2}
           value={element.rating}
           readOnly
@@ -135,7 +112,7 @@ export default function CompanyList({
       <Table.Td>
         <Rating
           name="rating"
-          size="lg"
+          size="sm"
           fractions={2}
           value={element.difficulty}
           readOnly
@@ -144,21 +121,24 @@ export default function CompanyList({
       <Table.Td>
         <Rating
           name="rating"
-          size="lg"
+          size="sm"
           fractions={2}
           value={element.responsiveness}
           readOnly
         />
       </Table.Td>
-      <Table.Td>{element.gotTheJob ? "T" : "F"}</Table.Td>
-      <Table.Td>{dayjs(element.date_created).format("DD-MM-YYYY")}</Table.Td>
+      <Table.Td className="w-1/12">
+        <div className="flex justify-center">
+          {element.gotTheJob ? "T" : "F"}
+        </div>
+      </Table.Td>
     </Table.Tr>
   ));
 
   return (
-    <div className="h-screen">
+    <div>
       <ScrollArea>
-        <TextInput
+        {/* <TextInput
           placeholder="Search by any field"
           mb="md"
           leftSection={
@@ -169,57 +149,18 @@ export default function CompanyList({
           }
           value={search}
           onChange={handleSearchChange}
-        />
-        <Table
-          horizontalSpacing="md"
-          verticalSpacing="xs"
-          miw={700}
-          layout="fixed"
-        >
+        /> */}
+        <Table horizontalSpacing="xs" verticalSpacing="xs" miw={600}>
           <Table.Tbody>
             <Table.Tr>
-              <Th
-                sorted={sortBy === "company"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("company")}
-              >
-                Company
-              </Th>
-              <Th
-                sorted={sortBy === "rating"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("rating")}
-              >
-                Rating
-              </Th>
-              <Th
-                sorted={sortBy === "difficulty"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("difficulty")}
-              >
-                Difficulty
-              </Th>{" "}
-              <Th
-                sorted={sortBy === "responsiveness"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("responsiveness")}
-              >
+              <Th onSort={() => handleNewSorting("created_by")}>Date</Th>
+              <Th onSort={() => handleNewSorting("company")}>Company</Th>
+              <Th onSort={() => handleNewSorting("rating")}>Rating</Th>
+              <Th onSort={() => handleNewSorting("difficulty")}>Difficulty</Th>
+              <Th onSort={() => handleNewSorting("responsiveness")}>
                 Difficulty
               </Th>
-              <Th
-                sorted={sortBy === "gotTheJob"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("gotTheJob")}
-              >
-                Acquired
-              </Th>
-              <Th
-                sorted={sortBy === "created_by"}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting("created_by")}
-              >
-                Date
-              </Th>
+              <Th onSort={() => handleNewSorting("gotTheJob")}>Acquired</Th>
             </Table.Tr>
           </Table.Tbody>
           <Table.Tbody>
@@ -240,11 +181,10 @@ export default function CompanyList({
 
       <Pagination
         className="mt-6"
-        total={Math.ceil(reviewCount)}
+        total={Math.ceil(maxPages)}
         boundaries={2}
-        onChange={async (page) => {
-          await getCompanies(page);
-        }}
+        onChange={handleNewPage}
+        value={parseInt(searchParams.get("page") ?? "1", 10)}
       />
     </div>
   );

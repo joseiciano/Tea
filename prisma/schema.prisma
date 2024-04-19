@@ -73,6 +73,7 @@ model Review {
     difficulty Int
     responsiveness Int
     gotTheJob Boolean
+    position String @default("")
 
     detailed String
     url String
