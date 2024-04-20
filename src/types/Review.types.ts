@@ -5,6 +5,7 @@ export const ReviewFormSchema = z.object({
   companyOther: z.string().optional(),
   position: z.string().min(1),
   url: z.string().min(1),
+  dateCreated: z.string().min(1).max(10),
   consent: z.boolean(),
   rating: z.number().min(1).max(5),
   difficulty: z.number().min(1).max(5),

@@ -1,5 +1,5 @@
 import { type Review } from "@prisma/client";
-import { type getCompanyData } from "~/app/actions/fetchData";
+import { type getCompanyData } from "~/app/api/companies/fetchData";
 
 export type CompanyFilter = {
   filters?: {
