@@ -18,6 +18,7 @@ import {
 import classes from "./CompanyList.module.css";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 interface ThProps {
   children: React.ReactNode;
@@ -97,7 +98,11 @@ export default function CompanyList({
 
   const rows = companies.map((element: Review) => (
     <Table.Tr key={element.id}>
-      <Table.Td>{dayjs(element.date_created).format("DD-MM-YYYY")}</Table.Td>
+      <Table.Td>
+        <Link href={{ pathname: "/review", query: { id: element.id } }}>
+          {dayjs(element.date_created).format("DD-MM-YYYY")}
+        </Link>
+      </Table.Td>
 
       <Table.Td>{element.company}</Table.Td>
       <Table.Td>

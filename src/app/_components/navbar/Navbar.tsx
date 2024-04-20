@@ -16,9 +16,9 @@ import classes from "./Navbar.module.css";
 import { type Session } from "next-auth";
 import { usePathname } from "next/navigation";
 import ColorToggle from "../color-toggle/colorToggle";
+import Link from "next/link";
 
 const links = [
-  { link: "/", label: "Home" },
   { link: "/companies", label: "Companies" },
   { link: "/submit-review", label: "Make a Review" },
   { link: "/api/auth/signin", label: "Sign In" },
@@ -35,7 +35,7 @@ export default function Navbar({ session }: { session: Session | null }) {
   const items = links
     .filter(({ label }) => label !== (session ? "Sign In" : "Sign Out"))
     .map(({ label, link }) => (
-      <a
+      <Link
         key={label}
         href={link}
         className={classes.link}
@@ -47,13 +47,15 @@ export default function Navbar({ session }: { session: Session | null }) {
         }}
       >
         {label}
-      </a>
+      </Link>
     ));
 
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <div>Title Here</div>
+        <div>
+          <Link href="/">Title Here</Link>
+        </div>
         <Group gap={5} visibleFrom="xs">
           {items}
           <ColorToggle />

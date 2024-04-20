@@ -1,13 +1,14 @@
 import React from "react";
 import CompanyList from "../_components/company-list/CompanyList";
-import { getCompanyData, getCompanyDataPageCount } from "../actions/fetchData";
+import { getCompanyData } from "../api/companies/fetchData";
 import { type CompanyFilter } from "~/types/Company";
 import { type Review } from "@prisma/client";
+import { getTotalReviewPages } from "../api/companies/getTotalPages";
+import { getCompaniesList } from "../api/companies/getCompaniesList";
 
 async function Companies({
   searchParams,
 }: {
-  params: { slug: string };
   searchParams: Record<string, string | undefined>;
 }) {
   const page = parseInt(searchParams?.page ?? "1", 10);
@@ -20,8 +21,14 @@ async function Companies({
       },
     ];
   }
-  const companies = await getCompanyData(companyFilter, page - 1);
-  const companyDataPages = await getCompanyDataPageCount();
+  const companies = await getCompanyData(
+    companyFilter,
+    page > 1 ? page - 1 : page,
+  );
+
+  const list = await getCompaniesList();
+  console.log("LIST", list);
+  const companyDataPages = await getTotalReviewPages();
 
   return (
     <div className="mx-auto max-w-5xl">
