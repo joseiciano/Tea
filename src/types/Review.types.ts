@@ -12,6 +12,7 @@ export const ReviewFormSchema = z.object({
   responsiveness: z.number().min(1).max(5),
   detailed: z.string().min(1),
   gotTheJob: z.boolean(),
+  honey: z.string().max(0),
 });
 
 export type ReviewForm = z.infer<typeof ReviewFormSchema>;
