@@ -11,6 +11,7 @@ import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
 import { getServerAuthSession } from "~/server/auth";
 import { Footer } from "./_components/footer/Footer";
 import Navbar from "./_components/navbar/Navbar";
+import { getCompaniesList } from "./(pages)/api/companies/getCompaniesList";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -74,15 +75,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerAuthSession();
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <MantineProvider theme={theme} defaultColorScheme="auto">
           <ColorSchemeScript />
-          <Navbar session={session} />
           {children}
-          <Footer />
         </MantineProvider>
       </body>
     </html>

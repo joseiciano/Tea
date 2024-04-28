@@ -8,17 +8,13 @@ export async function getCompanyData(
   filters: CompanyFilter = {},
   page = 0,
   take = 15,
+  company?: string,
 ) {
   "use server";
 
-  const ip = headers().get("x-forwarded-for");
-  const { remaining, limit, success } = await rateLimit.limit(ip!);
+  // const ip = headers().get("x-forwarded-for");
+  // const { remaining, limit, success } = await rateLimit.limit(ip!);
 
-  console.log("RESULTS", {
-    remaining,
-    limit,
-    success,
-  });
   let dateOrder = false;
   const orderBy: Partial<Record<keyof Review, "desc" | "asc">>[] =
     filters.sortBy?.map((sortFilter) => {
@@ -34,10 +30,14 @@ export async function getCompanyData(
     orderBy.push({ date_created: "desc" });
   }
 
-  const companies = await db.review.findMany({
+  const companies: Review[] = await db.review.findMany({
     skip: page * take,
     take: take,
+    where: {
+      company: company,
+    },
     orderBy,
   });
+
   return companies;
 }

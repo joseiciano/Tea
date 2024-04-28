@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect } from "react";
-import CustomRating from "../custom-rating/CustomRating";
+import CustomRating from "~/app/_components/custom-rating/CustomRating";
 
 interface ThProps {
   children: React.ReactNode;
@@ -86,6 +86,9 @@ export default function CompanyList({
   //     }),
   //   );
   // };
+  useEffect(() => {
+    console.log("COMPANIES", companies.length);
+  }, [companies]);
 
   const handleNewPage = (page: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());

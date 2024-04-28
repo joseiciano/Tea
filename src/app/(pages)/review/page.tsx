@@ -1,8 +1,8 @@
 import React from "react";
-import ReviewForm from "../_components/review-form/reviewForm";
-import submitForm from "../api/review/submitForm";
 import { getReview } from "../api/review/fetchReview";
 import { getCompaniesList } from "../api/companies/getCompaniesList";
+import ReviewForm from "~/app/_components/review-form/reviewForm";
+import submitForm from "../api/review/submitForm";
 
 async function ReadReview({
   searchParams,

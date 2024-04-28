@@ -18,13 +18,11 @@ export function HeroBullets() {
     <Container size="md">
       <div className={classes.inner}>
         <div className={classes.content}>
-          <Title className={classes.title}>
-            <span className={classes.highlight}>View</span> the{" "}
-            <span className={classes.highlight}>&apos;View</span>
-          </Title>
+          {/* Alternative Title: Brewing Better INterviews */}
+          {/* Alternative Title: Better Brewing INterviews */}
+          <Title className={classes.title}>Sip, Share, Review</Title>
           <Text c="dimmed" mt="md">
-            Know what you&apos;re getting into? Review the interview process for
-            a company you&apos;re applying for.
+            Review the interview process for a company you&apos;re applying for.
           </Text>
 
           <List

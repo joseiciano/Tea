@@ -39,7 +39,7 @@ export function useReviewForm(
       company: getCompanyInitialForm(),
       companyOther: "",
       consent: true,
-      position: (reviewInfo?.position as string) ?? "",
+      position: reviewInfo?.position ?? "",
       dateCreated: dayjs().format("MM-DD-YYYY"),
       url: reviewInfo?.url ?? "",
       rating: reviewInfo?.rating ?? 0,

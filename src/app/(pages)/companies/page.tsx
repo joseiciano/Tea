@@ -1,10 +1,12 @@
 import React from "react";
-import CompanyList from "../_components/company-list/CompanyList";
+import CompanyList from "../../_components/company-list/CompanyList";
 import { getCompanyData } from "../api/companies/fetchData";
 import { type CompanyFilter } from "~/types/Company";
 import { type Review } from "@prisma/client";
 import { getTotalReviewPages } from "../api/companies/getTotalPages";
-import { getCompaniesList } from "../api/companies/getCompaniesList";
+import CompanyHeader from "../../_components/company-header/CompanyHeader";
+
+export const dynamic = "force-dynamic";
 
 async function Companies({
   searchParams,
@@ -21,17 +23,24 @@ async function Companies({
       },
     ];
   }
+
   const companies = await getCompanyData(
     companyFilter,
-    page > 1 ? page - 1 : page,
+    page > 0 ? page - 1 : page,
+    15,
+    searchParams.company,
   );
 
-  const list = await getCompaniesList();
-  console.log("LIST", list);
-  const companyDataPages = await getTotalReviewPages();
+  const companyDataPages = await getTotalReviewPages(searchParams.company);
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto min-h-screen max-w-5xl">
+      {searchParams.company && (
+        <CompanyHeader
+          company={searchParams.company}
+          totalReviews={companyDataPages}
+        />
+      )}
       <CompanyList companies={companies} maxPages={companyDataPages / 15} />
     </div>
   );

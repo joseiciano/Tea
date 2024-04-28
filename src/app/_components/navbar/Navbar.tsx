@@ -7,9 +7,9 @@ import {
   Burger,
   Drawer,
   Divider,
-  Button,
   ScrollArea,
   rem,
+  Select,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./Navbar.module.css";
@@ -17,6 +17,9 @@ import { type Session } from "next-auth";
 import { usePathname } from "next/navigation";
 import ColorToggle from "../color-toggle/colorToggle";
 import Link from "next/link";
+import { useForm } from "@mantine/form";
+import Logo from "../logo/Logo";
+import { useRouter } from "next/navigation";
 
 const links = [
   { link: "/companies", label: "Companies" },
@@ -25,8 +28,42 @@ const links = [
   { link: "/api/auth/signout", label: "Sign Out" },
 ];
 
-export default function Navbar({ session }: { session: Session | null }) {
+function SearchBar({ data }: { data: string[] }) {
+  const router = useRouter();
+  const companySearch = useForm({
+    initialValues: {
+      company: "",
+    },
+  });
+
+  const handleOnSelect = async (company: string | null) => {
+    companySearch.reset();
+    console.log("GOGOGOGOGO");
+    router.push(`/companies?company=${company}&page=1`);
+  };
+
+  return (
+    <Select
+      placeholder="Enter your search here"
+      data={data}
+      searchable
+      {...companySearch.getInputProps("company")}
+      className="mr-3"
+      onChange={handleOnSelect}
+    />
+  );
+}
+
+export default function Navbar({
+  session,
+  companiesList,
+}: {
+  session: Session | null;
+  companiesList: string[];
+}) {
   const [opened, { toggle }] = useDisclosure(false);
+  const [search, setSearch] = useState("");
+
   const pathname = usePathname();
   const [active, setActive] = useState(
     links.find(({ link }) => link === pathname)?.link,
@@ -53,39 +90,44 @@ export default function Navbar({ session }: { session: Session | null }) {
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <div>
-          <Link href="/">Title Here</Link>
-        </div>
-        <Group gap={5} visibleFrom="xs">
+        <Logo />
+
+        <Group gap={5} visibleFrom="sm">
+          <SearchBar data={companiesList} />
           {items}
           <ColorToggle />
         </Group>
 
-        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       </Container>
 
-      <Drawer
+      <Drawer.Root
         opened={opened}
         onClose={toggle}
         size="100%"
-        padding="md"
-        title="Navigation"
+        padding="lg"
         hiddenFrom="sm"
-        zIndex={1000000}
       >
-        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
-          <Divider my="sm" />
+        <Drawer.Overlay />
+        <Drawer.Content>
+          <Drawer.Header>
+            <Drawer.Title>
+              <Logo />
+            </Drawer.Title>
+            <Drawer.CloseButton />
+          </Drawer.Header>
+          <Drawer.Body>
+            <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
+              <Divider my="sm" />
+              <SearchBar data={companiesList} />
 
-          {items}
+              {items}
 
-          <Divider my="sm" />
-
-          <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
-          </Group>
-        </ScrollArea>
-      </Drawer>
+              <Divider my="sm" />
+            </ScrollArea>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
     </header>
   );
 }
