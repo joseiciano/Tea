@@ -8,10 +8,6 @@ import "@mantine/colors-generator";
 import { Inter } from "next/font/google";
 
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
-import { getServerAuthSession } from "~/server/auth";
-import { Footer } from "./_components/footer/Footer";
-import Navbar from "./_components/navbar/Navbar";
-import { getCompaniesList } from "./(pages)/api/companies/getCompaniesList";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -78,8 +74,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
+        <ColorSchemeScript defaultColorScheme="auto" />
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <ColorSchemeScript />
           {children}
         </MantineProvider>
       </body>

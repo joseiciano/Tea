@@ -8,7 +8,6 @@ import {
   Pagination,
   Container,
   Group,
-  rem,
   Center,
   useComputedColorScheme,
 } from "@mantine/core";

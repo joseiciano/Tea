@@ -16,7 +16,6 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { type ReviewForm } from "~/types/Review.types";
 import { useReviewForm } from "./useReviewForm";
 import CustomRating from "../custom-rating/CustomRating";
-import { type Session } from "next-auth";
 import classes from "./ReviewForm.module.css";
 
 interface ReviewFormProps {
@@ -60,6 +59,7 @@ function ReviewForm({
             placeholder="Today's Date"
             {...customReviewForm.getInputProps("dateCreated")}
             className="mt-5 w-1/4"
+            readOnly
           />
         </div>
 

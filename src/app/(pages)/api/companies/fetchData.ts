@@ -1,8 +1,8 @@
 import { type Review } from "@prisma/client";
 import { db } from "~/server/db";
 import { type CompanyFilter } from "~/types/Company";
-import { headers } from "next/headers";
-import { rateLimit } from "~/server/ratelimit";
+// import { headers } from "next/headers";
+// import { rateLimit } from "~/server/ratelimit";
 
 export async function getCompanyData(
   filters: CompanyFilter = {},

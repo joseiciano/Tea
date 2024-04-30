@@ -65,7 +65,6 @@ export default function Navbar({
   size: MantineSize;
 }) {
   const [opened, { toggle }] = useDisclosure(false);
-  const [search, setSearch] = useState("");
 
   const pathname = usePathname();
   const [active, setActive] = useState(
@@ -80,10 +79,8 @@ export default function Navbar({
         href={link}
         className={classes.link}
         data-active={active === link || undefined}
-        onClick={(event) => {
-          // event.preventDefault();
+        onClick={(_) => {
           setActive(link);
-          console.log("Route to", link);
         }}
       >
         {label}
