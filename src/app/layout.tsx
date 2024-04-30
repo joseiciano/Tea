@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Espresso",
+  title: "JustTea",
   description: "Spill the Tea",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };

@@ -8,7 +8,7 @@ function Logo() {
   return (
     <div className={logoFont.className}>
       <Link href="/">
-        <h1 className="text-2xl">Espresso</h1>
+        <h1 className="text-2xl">Just Tea</h1>
       </Link>
     </div>
   );

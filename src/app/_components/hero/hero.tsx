@@ -22,7 +22,7 @@ export function HeroBullets({ session }: { session: Session | null }) {
         <div className={classes.content}>
           {/* Alternative Title: Brewing Better INterviews */}
           {/* Alternative Title: Better Brewing INterviews */}
-          <Title className={classes.title}>Sip, Share, Review</Title>
+          <Title className={classes.title}>Spill the Tea</Title>
           <Text c="dimmed" mt="md">
             Review the interview process for a company you&apos;re applying for.
           </Text>
