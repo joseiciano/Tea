@@ -10,6 +10,7 @@ import {
   ScrollArea,
   rem,
   Select,
+  type MantineSize,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./Navbar.module.css";
@@ -57,9 +58,11 @@ function SearchBar({ data }: { data: string[] }) {
 export default function Navbar({
   session,
   companiesList,
+  size = "md",
 }: {
   session: Session | null;
   companiesList: string[];
+  size: MantineSize;
 }) {
   const [opened, { toggle }] = useDisclosure(false);
   const [search, setSearch] = useState("");
@@ -89,7 +92,7 @@ export default function Navbar({
 
   return (
     <header className={classes.header}>
-      <Container size="md" className={classes.inner}>
+      <Container size={size} className={classes.inner}>
         <Logo />
 
         <Group gap={5} visibleFrom="sm">

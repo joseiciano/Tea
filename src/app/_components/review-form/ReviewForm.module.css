@@ -1,0 +1,6 @@
+.wrapper {
+  border-radius: var(--mantine-radius-md);
+  padding-bottom: var(--mantine-spacing-md);
+  border: 1px solid var(--mantine-color-default-border);
+  margin-top: 1.25rem;
+}

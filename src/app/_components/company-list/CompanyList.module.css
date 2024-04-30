@@ -1,5 +1,17 @@
-.th {
-  padding: 0;
+.tableWrapper {
+  background-color: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  margin-top: 1.25rem;
+  border-radius: var(--mantine-radius-md);
+  padding-bottom: var(--mantine-spacing-lg);
+}
+
+.tableWrapperNight {
+  /* background-color: var(--mantine-color-dark-9); */
+}
+
+.tableWrapperDay {
+  /* background-color: var(--mantine-color-gray-1); */
 }
 
 .control {
@@ -16,8 +28,9 @@
   }
 }
 
-.icon {
-  width: rem(16px);
-  height: rem(16px);
-  border-radius: rem(16px);
+.pagination {
+  margin-top: var(--mantine-spacing-sm);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }

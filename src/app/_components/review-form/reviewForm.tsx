@@ -4,6 +4,7 @@ import { type Review } from ".prisma/client";
 import {
   Button,
   Checkbox,
+  Container,
   Group,
   Popover,
   Select,
@@ -13,8 +14,10 @@ import {
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { type ReviewForm } from "~/types/Review.types";
-import { RatingInput } from "./RatingInput";
 import { useReviewForm } from "./useReviewForm";
+import CustomRating from "../custom-rating/CustomRating";
+import { type Session } from "next-auth";
+import classes from "./ReviewForm.module.css";
 
 interface ReviewFormProps {
   submitReview: (values: ReviewForm) => Promise<Review>;
@@ -38,7 +41,7 @@ function ReviewForm({
   } = useReviewForm(submitReview, companiesList, reviewInfo);
 
   return (
-    <>
+    <Container size="md" className={classes.wrapper}>
       <form>
         <div className="flex justify-between">
           <Select
@@ -88,23 +91,29 @@ function ReviewForm({
           readOnly={readOnly}
         />
 
-        <RatingInput
-          name="Review"
-          inputProps={customReviewForm.getInputProps("rating")}
-          readOnly={readOnly}
-        />
+        <div className="mt-5">
+          <p>Overall Experience</p>
+          <CustomRating
+            readOnly={false}
+            inputProps={customReviewForm.getInputProps("rating")}
+          />
+        </div>
 
-        <RatingInput
-          name="Difficulty"
-          inputProps={customReviewForm.getInputProps("difficulty")}
-          readOnly={readOnly}
-        />
+        <div className="mt-5">
+          <p>Difficulty</p>
+          <CustomRating
+            readOnly={false}
+            inputProps={customReviewForm.getInputProps("difficulty")}
+          />
+        </div>
 
-        <RatingInput
-          name="Responsiveness"
-          inputProps={customReviewForm.getInputProps("responsiveness")}
-          readOnly={readOnly}
-        />
+        <div className="mt-5">
+          <p>Responsiveness</p>
+          <CustomRating
+            readOnly={false}
+            inputProps={customReviewForm.getInputProps("responsiveness")}
+          />
+        </div>
 
         <div className="mt-5">
           <Textarea
@@ -176,7 +185,7 @@ function ReviewForm({
           </Group>
         )}
       </form>
-    </>
+    </Container>
   );
 }
 

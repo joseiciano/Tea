@@ -20,7 +20,6 @@ function ColorToggle() {
     <Group justify="center">
       <ActionIcon
         onClick={() => {
-          console.log("ColorSchema");
           setColorScheme(computedColorScheme === "light" ? "dark" : "light");
         }}
         variant="default"

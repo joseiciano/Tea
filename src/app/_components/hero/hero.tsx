@@ -12,8 +12,10 @@ import {
 } from "@mantine/core";
 
 import classes from "./hero.module.css";
+import Link from "next/link";
+import { type Session } from "next-auth";
 
-export function HeroBullets() {
+export function HeroBullets({ session }: { session: Session | null }) {
   return (
     <Container size="md">
       <div className={classes.inner}>
@@ -39,11 +41,10 @@ export function HeroBullets() {
             }
           >
             <List.Item>
-              <b>Know the Game</b> – Be able to prep specifically for the job.
+              <b>Be Prepped</b> – Be able to prep specifically for the job.
             </List.Item>
             <List.Item>
-              <b>Yearly Updated</b> – Stay fresh and up-to-date with the most
-              recent info.
+              <b>Stay up to date</b> – Stay fresh with the most recent info.
             </List.Item>
             <List.Item>
               <b>Privacy</b> – Reviews stay anonymous. We won&apos;t publicly
@@ -53,7 +54,7 @@ export function HeroBullets() {
 
           <Group mt={30}>
             <Button radius="xl" size="md" className={classes.control}>
-              Company Reviews
+              Read Reviews
             </Button>
             <Button
               variant="default"
@@ -61,13 +62,14 @@ export function HeroBullets() {
               size="md"
               className={classes.control}
             >
-              Submit a Review
+              {!session && <Link href="/api/auth/signin">Submit a Review</Link>}
+              {session && <Link href="submit-review">Submit a Review</Link>}
             </Button>
           </Group>
         </div>
         <Image
           visibleFrom="md"
-          style={{ height: 450, width: 450 }}
+          className="h-450 w-450"
           alt="My image"
           src="/programmer.svg"
         />

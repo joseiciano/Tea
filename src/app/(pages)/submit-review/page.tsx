@@ -6,11 +6,7 @@ import { getCompaniesList } from "../api/companies/getCompaniesList";
 async function SubmitReview() {
   const companiesList = await getCompaniesList();
 
-  return (
-    <div className="mx-auto max-w-2xl ">
-      <ReviewForm submitReview={submitForm} companiesList={companiesList} />
-    </div>
-  );
+  return <ReviewForm submitReview={submitForm} companiesList={companiesList} />;
 }
 
 export default SubmitReview;

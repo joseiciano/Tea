@@ -34,7 +34,7 @@ async function Companies({
   const companyDataPages = await getTotalReviewPages(searchParams.company);
 
   return (
-    <div className="mx-auto min-h-screen max-w-5xl">
+    <>
       {searchParams.company && (
         <CompanyHeader
           company={searchParams.company}
@@ -42,7 +42,7 @@ async function Companies({
         />
       )}
       <CompanyList companies={companies} maxPages={companyDataPages / 15} />
-    </div>
+    </>
   );
 }
 

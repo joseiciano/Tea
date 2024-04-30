@@ -5,24 +5,26 @@ import {
   ScrollArea,
   UnstyledButton,
   Text,
-  Rating,
   Pagination,
-  rem,
   Container,
+  Group,
+  rem,
+  Center,
+  useComputedColorScheme,
 } from "@mantine/core";
 // import { Pagination, Rating, Table } from "@mantine/core";
 import { type Review } from "@prisma/client";
+import cx from "clsx";
+
 import {
   IconSelector,
   IconChevronDown,
   IconChevronUp,
-  IconCoffee,
 } from "@tabler/icons-react";
 import classes from "./CompanyList.module.css";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useEffect } from "react";
 import CustomRating from "../custom-rating/CustomRating";
 
 interface ThProps {
@@ -39,19 +41,16 @@ function Th({ children, onSort }: ThProps) {
       : IconChevronDown
     : IconSelector;
   return (
-    <Table.Th className={classes.th}>
+    <Table.Th className="p-0">
       <UnstyledButton onClick={onSort} className={classes.control}>
-        <Text fw={500} fz="sm">
-          {children}
-        </Text>
-        {/* <Group justify="space-between">
+        <Group justify="space-between">
           <Text fw={500} fz="sm">
             {children}
           </Text>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          <Center className="h-4 w-4 rounded-2xl">
+            <Icon className="h-4 w-4 stroke-2" />
           </Center>
-        </Group> */}
+        </Group>
       </UnstyledButton>
     </Table.Th>
   );
@@ -67,25 +66,6 @@ export default function CompanyList({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  // const setSorting = (field: keyof Review) => {
-  //   const reversed = field === sortBy ? !reverseSortDirection : false;
-  //   setReverseSortDirection(reversed);
-  //   setSortBy(field);
-  //   setSortedData(sortData(companies, { sortBy: field, reversed, search }));
-  // };
-
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value } = event.currentTarget;
-  //   setSearch(value);
-  //   setSortedData(
-  //     sortData(sortedData, {
-  //       sortBy,
-  //       reversed: reverseSortDirection,
-  //       search: value,
-  //     }),
-  //   );
-  // };
 
   const handleNewPage = (page: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -135,11 +115,23 @@ export default function CompanyList({
     </Table.Tr>
   ));
 
+  const colorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
+
   return (
-    <Container my="md">
-      <div className="mt-5">
-        <ScrollArea>
-          {/* <TextInput
+    <Container
+      my="md"
+      size="md"
+      className={cx(
+        classes.tableWrapper,
+        colorScheme === "light"
+          ? classes.tableWrapperDay
+          : classes.tableWrapperNight,
+      )}
+    >
+      <ScrollArea>
+        {/* <TextInput
           placeholder="Search by any field"
           mb="md"
           leftSection={
@@ -151,47 +143,44 @@ export default function CompanyList({
           value={search}
           onChange={handleSearchChange}
         /> */}
-          <Table horizontalSpacing="xs" verticalSpacing="xs" miw={600}>
-            <Table.Tbody>
+        <Table horizontalSpacing="xs" verticalSpacing="xs" miw={600}>
+          <Table.Tbody>
+            <Table.Tr>
+              <Th onSort={() => handleNewSorting("created_by")}>Date</Th>
+              <Th onSort={() => handleNewSorting("company")}>Company</Th>
+              <Th onSort={() => handleNewSorting("rating")}>Rating</Th>
+              <Th onSort={() => handleNewSorting("difficulty")}>Difficulty</Th>
+              <Th onSort={() => handleNewSorting("responsiveness")}>
+                Difficulty
+              </Th>
+              {/* <Th onSort={() => handleNewSorting("gotTheJob")}>Passed</Th> */}
+            </Table.Tr>
+          </Table.Tbody>
+          <Table.Tbody>
+            {rows.length > 0 ? (
+              rows
+            ) : (
               <Table.Tr>
-                <Th onSort={() => handleNewSorting("created_by")}>Date</Th>
-                <Th onSort={() => handleNewSorting("company")}>Company</Th>
-                <Th onSort={() => handleNewSorting("rating")}>Rating</Th>
-                <Th onSort={() => handleNewSorting("difficulty")}>
-                  Difficulty
-                </Th>
-                <Th onSort={() => handleNewSorting("responsiveness")}>
-                  Difficulty
-                </Th>
-                {/* <Th onSort={() => handleNewSorting("gotTheJob")}>Passed</Th> */}
+                <Table.Td colSpan={companies.length}>
+                  <Text fw={500} ta="center">
+                    No reviews found...
+                  </Text>
+                </Table.Td>
               </Table.Tr>
-            </Table.Tbody>
-            <Table.Tbody>
-              {rows.length > 0 ? (
-                rows
-              ) : (
-                <Table.Tr>
-                  <Table.Td colSpan={companies.length}>
-                    <Text fw={500} ta="center">
-                      No reviews found...
-                    </Text>
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
-          </Table>
-        </ScrollArea>
+            )}
+          </Table.Tbody>
+        </Table>
+      </ScrollArea>
 
-        {companies.length > 0 && (
-          <Pagination
-            className="mt-6 flex justify-end"
-            total={Math.ceil(maxPages)}
-            boundaries={2}
-            onChange={handleNewPage}
-            value={parseInt(searchParams.get("page") ?? "1", 10)}
-          />
-        )}
-      </div>
+      {companies.length > 0 && (
+        <Pagination
+          className={classes.pagination}
+          total={Math.ceil(maxPages)}
+          boundaries={2}
+          onChange={handleNewPage}
+          value={parseInt(searchParams.get("page") ?? "1", 10)}
+        />
+      )}
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { Container, Group, Anchor } from "@mantine/core";
+import { Container, Group, Anchor, type MantineSize } from "@mantine/core";
 import classes from "./Footer.module.css";
 import Logo from "../logo/Logo";
 
@@ -10,7 +10,7 @@ const links = [
   // { link: "#", label: "Careers" },
 ];
 
-export function Footer() {
+export function Footer({ size = "md" }: { size: MantineSize }) {
   const items = links.map((link) => (
     <Anchor<"a"> c="dimmed" key={link.label} href={link.link} size="sm">
       {link.label}
@@ -19,7 +19,7 @@ export function Footer() {
 
   return (
     <div className={classes.footer}>
-      <Container className={classes.inner}>
+      <Container size={size} className={classes.inner}>
         <Logo />
         <Group className={classes.links}>{items}</Group>
       </Container>

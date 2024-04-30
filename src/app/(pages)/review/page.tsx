@@ -7,7 +7,7 @@ import submitForm from "../api/review/submitForm";
 async function ReadReview({
   searchParams,
 }: {
-  searchParams: Record<string, string | undefined>;
+  searchParams: Record<string, string>;
 }) {
   const { id } = searchParams;
   if (!id) {
@@ -22,14 +22,12 @@ async function ReadReview({
   const companiesList = await getCompaniesList();
 
   return (
-    <div className="mx-auto max-w-2xl ">
-      <ReviewForm
-        submitReview={submitForm}
-        readOnly
-        reviewInfo={reviewInfo}
-        companiesList={companiesList}
-      />
-    </div>
+    <ReviewForm
+      submitReview={submitForm}
+      readOnly
+      reviewInfo={reviewInfo}
+      companiesList={companiesList}
+    />
   );
 }
 
