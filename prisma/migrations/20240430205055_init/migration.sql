@@ -49,6 +49,23 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Review" (
+    "id" TEXT NOT NULL,
+    "company" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "difficulty" INTEGER NOT NULL,
+    "responsiveness" INTEGER NOT NULL,
+    "gotTheJob" BOOLEAN NOT NULL,
+    "position" TEXT NOT NULL DEFAULT '',
+    "detailed" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "date_created" TIMESTAMP(3) NOT NULL,
+    "created_by" TEXT NOT NULL,
+
+    CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
