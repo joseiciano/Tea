@@ -12,7 +12,6 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import cx from "clsx";
 import React, { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { type ReviewForm } from "~/types/Review.types";
@@ -42,7 +41,11 @@ function RatingsBlock({
       <Text className={classes.ratingCategory}>
         {text} <span className={classes.required}>*</span>
       </Text>
-      <CustomRating readOnly={false} inputProps={inputProps} />
+      <CustomRating
+        readOnly={false}
+        inputProps={inputProps}
+        errorFlag={errorFlag}
+      />
       {errorFlag && (
         <Text className={classes.errMsgRating}>Please fill in a value</Text>
       )}

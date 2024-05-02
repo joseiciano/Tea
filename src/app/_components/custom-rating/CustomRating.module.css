@@ -1,0 +1,7 @@
+.errorMsg {
+  color: var(--mantine-color-error);
+}
+
+.defaultText {
+  color: var(--mantine-color-text);
+}

@@ -1,7 +1,8 @@
 import { Rating, rem } from "@mantine/core";
 import { IconCoffee } from "@tabler/icons-react";
 import { type GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
-import React from "react";
+import React, { useState } from "react";
+import classes from "./CustomRating.module.css";
 
 const getIconStyle = (color?: string) => ({
   width: rem(24),
@@ -13,11 +14,21 @@ function CustomRating({
   value,
   readOnly,
   inputProps,
+  errorFlag,
 }: {
   value?: number;
-  readOnly: boolean;
+  readOnly?: boolean;
   inputProps?: GetInputPropsReturnType;
+  errorFlag?: boolean;
 }) {
+  const [val, setVal] = useState(false);
+
+  const handleValueChanged = () => {
+    if (errorFlag) {
+      setVal(true);
+    }
+  };
+
   return (
     <Rating
       name="rating"
@@ -26,6 +37,8 @@ function CustomRating({
       value={value}
       readOnly={readOnly}
       {...inputProps}
+      onClick={handleValueChanged}
+      className={errorFlag && !val ? classes.errorMsg : classes.defaultText}
       emptySymbol={<IconCoffee style={getIconStyle()} />}
       fullSymbol={<IconCoffee style={getIconStyle("yellow")} />}
     />
