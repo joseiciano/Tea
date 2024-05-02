@@ -13,6 +13,7 @@
   font-size: var(--mantine-font-size-sm);
   line-height: var(--mantine-font-size-sm);
   margin-bottom: var(--mantine-spacing-xxs);
+  font-weight: 500;
 }
 
 .required {

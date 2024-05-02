@@ -39,13 +39,7 @@ function RatingsBlock({
 }) {
   return (
     <div className={classes.ratingBlock}>
-      <Text
-        className={
-          errorFlag
-            ? cx(classes.ratingCategory, classes.required)
-            : classes.ratingCategory
-        }
-      >
+      <Text className={classes.ratingCategory}>
         {text} <span className={classes.required}>*</span>
       </Text>
       <CustomRating readOnly={false} inputProps={inputProps} />
