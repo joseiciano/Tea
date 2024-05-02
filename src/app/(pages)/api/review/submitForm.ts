@@ -1,5 +1,19 @@
 import { type Review } from ".prisma/client";
 import { ReviewFormSchema, type ReviewForm } from "~/types/Review.types";
+
+import {
+  RegExpMatcher,
+  TextCensor,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
+import { ProfanityError } from "~/types/errors";
+
+const matcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
+
 export default async function submitForm(values: ReviewForm) {
   "use server";
 
@@ -16,6 +30,22 @@ export default async function submitForm(values: ReviewForm) {
   values.company = values.company[0]!.toUpperCase() + values.company.slice(1);
 
   // Just to be cool can add extra checks with chatgpt
+
+  // profanity filters
+  if (
+    matcher.hasMatch(values.company) ||
+    matcher.hasMatch(values.position) ||
+    matcher.hasMatch(values.detailed)
+  ) {
+    throw new ProfanityError(
+      matcher.hasMatch(values.company)
+        ? values.company
+        : matcher.hasMatch(values.detailed)
+          ? values.detailed
+          : values.position,
+    );
+  }
+
   // Save form to database
 
   // Return form info

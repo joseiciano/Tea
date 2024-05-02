@@ -63,6 +63,9 @@ const theme = createTheme({
     ],
   },
 
+  spacing: {
+    xxs: "0.4rem",
+  },
   // fontFamily: "open sans",
 });
 

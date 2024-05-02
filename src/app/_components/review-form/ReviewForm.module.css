@@ -1,6 +1,37 @@
+.ratingBlock {
+  margin-top: var(--mantine-spacing-md);
+}
+
 .wrapper {
   border-radius: var(--mantine-radius-md);
   padding-bottom: var(--mantine-spacing-md);
   border: 1px solid var(--mantine-color-default-border);
   margin-top: 1.25rem;
+}
+
+.ratingCategory {
+  font-size: var(--mantine-font-size-sm);
+  line-height: var(--mantine-font-size-sm);
+  margin-bottom: var(--mantine-spacing-xxs);
+}
+
+.required {
+  color: var(--mantine-color-error);
+}
+
+.submitBtnErrMsg {
+  color: var(--mantine-color-error);
+  font-size: var(--mantine-font-size-sm);
+  line-height: var(--mantine-font-size-sm);
+}
+
+.errMsg,
+.errMsgRating {
+  color: var(--mantine-color-error);
+  font-size: var(--mantine-font-size-sm);
+  line-height: var(--mantine-font-size-sm);
+}
+
+.errMsgRating {
+  margin-top: var(--mantine-spacing-xxs);
 }

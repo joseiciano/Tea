@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { type ReviewForm, ReviewFormSchema } from "~/types/Review.types";
+import { type ReviewForm } from "~/types/Review.types";
+import { ProfanityError } from "~/types/errors";
 
 export function useReviewForm(
   submitReview: (values: ReviewForm) => Promise<Review>,
@@ -11,14 +12,36 @@ export function useReviewForm(
   reviewInfo?: Review,
 ) {
   const [opened, setOpened] = useState(false);
+  const [errorInputsMsg, setErrorInputsMsg] = useState(false);
+  const [responsivenessMissing, setResponsivenessMissing] = useState(false);
+  const [overallMissing, setOverallMissing] = useState(false);
+  const [difficultyMissing, setDifficultyMissing] = useState(false);
 
   const toggleOpened = () => {
     setOpened(!opened);
   };
 
-  const openRecaptcha = () => {
+  const formCheck = () => {
     customReviewForm.validate();
-    if (customReviewForm.isValid()) {
+    const isValid = customReviewForm.isValid();
+
+    if (!isValid) {
+      setDifficultyMissing(!customReviewForm.isValid("difficulty"));
+      setOverallMissing(!customReviewForm.isValid("rating"));
+      setResponsivenessMissing(!customReviewForm.isValid("responsiveness"));
+
+      setErrorInputsMsg(
+        !customReviewForm.isValid("difficulty") ||
+          !customReviewForm.isValid("rating") ||
+          !customReviewForm.isValid("responsiveness"),
+      );
+    }
+
+    return isValid;
+  };
+
+  const openRecaptcha = () => {
+    if (formCheck()) {
       toggleOpened();
     }
   };
@@ -85,12 +108,23 @@ export function useReviewForm(
 
   const handleOnSubmit = async () => {
     const values = customReviewForm.values;
-    customReviewForm.validate();
-    if (ReviewFormSchema.safeParse(customReviewForm).success) {
-      const result = await submitReview(values);
-      router.push("/review?id=" + result.id);
+
+    try {
+      if (formCheck()) {
+        const result = await submitReview(values);
+
+        console.log("RESULT", result);
+        // router.push("/review?id=" + result.id);
+      }
+    } catch (err) {
+      if (err instanceof ProfanityError) {
+        console.log("PROFERR", err);
+      } else {
+        console.log("GENERAL ERR", err);
+      }
+    } finally {
+      toggleOpened();
     }
-    setOpened(false);
   };
 
   return {
@@ -99,5 +133,9 @@ export function useReviewForm(
     customReviewForm,
     handleOnSubmit,
     openRecaptcha,
+    errorInputsMsg,
+    overallMissing,
+    responsivenessMissing,
+    difficultyMissing,
   };
 }

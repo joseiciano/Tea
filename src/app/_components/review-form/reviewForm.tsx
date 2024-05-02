@@ -5,24 +5,55 @@ import {
   Button,
   Checkbox,
   Container,
-  Group,
   Popover,
   Select,
+  Stack,
+  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
-import React from "react";
+import cx from "clsx";
+import React, { useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { type ReviewForm } from "~/types/Review.types";
 import { useReviewForm } from "./useReviewForm";
 import CustomRating from "../custom-rating/CustomRating";
 import classes from "./ReviewForm.module.css";
+import { type GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
 
 interface ReviewFormProps {
   submitReview: (values: ReviewForm) => Promise<Review>;
   readOnly?: boolean;
   reviewInfo?: Review;
   companiesList: string[];
+}
+
+function RatingsBlock({
+  text,
+  inputProps,
+  errorFlag,
+}: {
+  text: string;
+  errorFlag: boolean;
+  inputProps: GetInputPropsReturnType;
+}) {
+  return (
+    <div className={classes.ratingBlock}>
+      <Text
+        className={
+          errorFlag
+            ? cx(classes.ratingCategory, classes.required)
+            : classes.ratingCategory
+        }
+      >
+        {text} <span className={classes.required}>*</span>
+      </Text>
+      <CustomRating readOnly={false} inputProps={inputProps} />
+      {errorFlag && (
+        <Text className={classes.errMsgRating}>Please fill in a value</Text>
+      )}
+    </div>
+  );
 }
 
 function ReviewForm({
@@ -37,7 +68,13 @@ function ReviewForm({
     customReviewForm,
     handleOnSubmit,
     openRecaptcha,
+    overallMissing,
+    difficultyMissing,
+    responsivenessMissing,
+    errorInputsMsg,
   } = useReviewForm(submitReview, companiesList, reviewInfo);
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   return (
     <Container size="md" className={classes.wrapper}>
@@ -91,31 +128,25 @@ function ReviewForm({
           readOnly={readOnly}
         />
 
-        <div className="mt-5">
-          <p>Overall Experience</p>
-          <CustomRating
-            readOnly={false}
-            inputProps={customReviewForm.getInputProps("rating")}
-          />
-        </div>
+        <RatingsBlock
+          text={"Overall Experience"}
+          errorFlag={overallMissing}
+          inputProps={customReviewForm.getInputProps("rating")}
+        />
 
-        <div className="mt-5">
-          <p>Difficulty</p>
-          <CustomRating
-            readOnly={false}
-            inputProps={customReviewForm.getInputProps("difficulty")}
-          />
-        </div>
+        <RatingsBlock
+          text={"Difficulty"}
+          errorFlag={difficultyMissing}
+          inputProps={customReviewForm.getInputProps("difficulty")}
+        />
 
-        <div className="mt-5">
-          <p>Responsiveness</p>
-          <CustomRating
-            readOnly={false}
-            inputProps={customReviewForm.getInputProps("responsiveness")}
-          />
-        </div>
+        <RatingsBlock
+          text={"Responsiveness"}
+          errorFlag={responsivenessMissing}
+          inputProps={customReviewForm.getInputProps("responsiveness")}
+        />
 
-        <div className="mt-5">
+        <div className={classes.ratingBlock}>
           <Textarea
             label="Detailed Review"
             description="Your experience"
@@ -164,7 +195,7 @@ function ReviewForm({
         />
 
         {!readOnly && (
-          <Group justify="flex-end" mt="md">
+          <Stack justify="flex-end" mt="md" align="flex-end">
             <Popover
               trapFocus
               position="bottom"
@@ -178,11 +209,20 @@ function ReviewForm({
               <Popover.Dropdown>
                 <ReCAPTCHA
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                  onChange={async () => handleOnSubmit()}
+                  onChange={async () => {
+                    await handleOnSubmit();
+                    recaptchaRef?.current?.reset();
+                  }}
+                  ref={recaptchaRef}
                 />
               </Popover.Dropdown>
             </Popover>
-          </Group>
+            {errorInputsMsg && (
+              <Text className={classes.errMsg}>
+                Please make sure your fields are filled in correctly.
+              </Text>
+            )}
+          </Stack>
         )}
       </form>
     </Container>
