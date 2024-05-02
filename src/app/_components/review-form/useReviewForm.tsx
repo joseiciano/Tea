@@ -113,7 +113,7 @@ export function useReviewForm(
       if (formCheck()) {
         const result = await submitReview(values);
 
-        console.log("RESULT", result);
+        console.log("RESULT", { result, router });
         // router.push("/review?id=" + result.id);
       }
     } catch (err) {

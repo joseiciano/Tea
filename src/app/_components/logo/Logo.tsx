@@ -1,5 +1,5 @@
 import React from "react";
-import { Cairo_Play, Leckerli_One } from "next/font/google";
+import { Leckerli_One } from "next/font/google";
 import Link from "next/link";
 
 const logoFont = Leckerli_One({ subsets: ["latin"], weight: "400" });

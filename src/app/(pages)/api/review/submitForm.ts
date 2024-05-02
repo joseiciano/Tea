@@ -3,7 +3,6 @@ import { ReviewFormSchema, type ReviewForm } from "~/types/Review.types";
 
 import {
   RegExpMatcher,
-  TextCensor,
   englishDataset,
   englishRecommendedTransformers,
 } from "obscenity";
